@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Socket Test Connection</title>
+</head>
+<body>
+    <h1>Web Socket Test Connection</h1>
+    <div id="messages">
+        <p>Messages will appear here</p>
+    </div>
+    <form id="form">
+        <input type="text" id="message" placeholder="Enter message">
+        <input type="submit" value="Send">
+    </form>
+
+    <script>
+        const form = document.getElementById('form');
+        const message = document.getElementById('message');
+        const messages = document.getElementById('messages');
+
+        const ws = new WebSocket('ws://localhost:5000');
+
+        // Connection opened
+        ws.addEventListener('open', function (event) {
+            console.log('Connected to the WS Server');
+        });
+
+        // Listen for messages
+        ws.addEventListener('message', function (event) {
+            console.log('Message from server ', event.data);
+        });
+
+        // Send message
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            ws.send(message.value);
+            message.value = '';
+        });
+    </script>
+
+</body>
+</html>
