@@ -1,43 +1,43 @@
-import Joi from "joi";
+import Joi from "joi"
 
 const register = {
   body: Joi.object().keys({
     username: Joi.string().required(),
     email: Joi.string().required(),
-    password: Joi.string().required(),
-  }),
-};
+    password: Joi.string().required()
+  })
+}
 
 const login = {
   body: Joi.object().keys({
     username: Joi.string().required(),
-    password: Joi.string().required(),
-  }),
-};
+    password: Joi.string().required()
+  })
+}
 
 const logout = {
   body: Joi.object().keys({
-    refreshToken: Joi.string().required(),
-  }),
-};
+    refreshToken: Joi.string().required()
+  })
+}
 
 const refreshTokens = {
   body: Joi.object().keys({
-    refreshToken: Joi.string().required(),
-  }),
-};
+    refreshToken: Joi.string().required()
+  })
+}
 
 const getUsers = {
   query: Joi.object().keys({
-    username: Joi.string(),
-  }),
-};
+    username: Joi.string()
+  })
+}
 
 const getUser = {
   params: Joi.object().keys({
-    username: Joi.string().required(),
-  }),
-};
+    username: Joi.string().required()
+  })
+}
 
 export default {
   register,
@@ -45,5 +45,5 @@ export default {
   logout,
   refreshTokens,
   getUsers,
-  getUser,
-};
+  getUser
+}

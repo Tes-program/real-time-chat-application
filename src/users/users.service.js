@@ -1,23 +1,23 @@
-import httpStatus from "http-status";
-import { User } from "../model/user.Collection.js";
-import { generateAuthTokens, verifyToken } from "../modules/auth.js";
-import { Token } from "../model/token.Collection.js";
+import httpStatus from "http-status"
+import { User } from "../model/user.Collection.js"
+import { generateAuthTokens, verifyToken } from "../modules/auth.js"
+import { Token } from "../model/token.Collection.js"
 
 export const createUser = async (username, email, password) => {
   if (await User.findOne({ username })) {
-    throw new Error("Username already exists");
+    throw new Error("Username already exists")
   }
   if (await User.findOne({ email })) {
-    throw new Error("Email already exists");
+    throw new Error("Email already exists")
   }
-  const user = new User({ username, email, password });
-  await user.save();
-  return user;
-};
+  const user = new User({ username, email, password })
+  await user.save()
+  return user
+}
 
 export const getAllUsers = async () => {
-  return User.find();
-};
+  return User.find()
+}
 
 /**
  *
@@ -25,20 +25,20 @@ export const getAllUsers = async () => {
  * @returns
  */
 export const getOneUser = async (username) => {
-  return User.findOne({ username });
-};
+  return User.findOne({ username })
+}
 
 export const loginUser = async (username, password) => {
-  const user = await getOneUser(username);
+  const user = await getOneUser(username)
   if (!user) {
-    throw new Error("Invalid username");
+    throw new Error("Invalid username")
   }
-  const isMatch = await user.comparePassword(password);
+  const isMatch = await user.comparePassword(password)
   if (!isMatch) {
-    throw new Error("Invalid password");
+    throw new Error("Invalid password")
   }
-  return user;
-};
+  return user
+}
 
 /**
  * Logout
@@ -50,13 +50,13 @@ export const logoutService = async (refreshToken) => {
   const refreshAllToken = await Token.findOne({
     token: refreshToken,
     type: "REFRESH",
-    blacklisted: false,
-  });
+    blacklisted: false
+  })
   if (!refreshAllToken) {
-    throw new Error(httpStatus.NOT_FOUND, "Not found");
+    throw new Error(httpStatus.NOT_FOUND, "Not found")
   }
-  await refreshAllToken.remove();
-};
+  await refreshAllToken.remove()
+}
 
 /**
  * Refresh auth tokens
@@ -65,15 +65,15 @@ export const logoutService = async (refreshToken) => {
  * @throws {Error}
  */
 export const refreshAuth = async (refreshToken) => {
-  const refreshAllToken = await verifyToken(refreshToken, "REFRESH");
+  const refreshAllToken = await verifyToken(refreshToken, "REFRESH")
   try {
-    const user = await User.findById(refreshAllToken.user);
+    const user = await User.findById(refreshAllToken.user)
     if (!user) {
-      throw new Error(httpStatus.NOT_FOUND, "Not found");
+      throw new Error(httpStatus.NOT_FOUND, "Not found")
     }
-    await refreshAllToken.remove();
-    return generateAuthTokens(user);
+    await refreshAllToken.remove()
+    return generateAuthTokens(user)
   } catch (err) {
-    throw new Error(httpStatus.UNAUTHORIZED, "Please authenticate");
+    throw new Error(httpStatus.UNAUTHORIZED, "Please authenticate")
   }
-};
+}
