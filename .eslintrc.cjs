@@ -3,24 +3,23 @@ module.exports = {
     browser: true,
     es2021: true
   },
-  extends: 'standard',
+  extends: "standard",
   overrides: [
     {
       env: {
         node: true
       },
-      files: [
-        '.eslintrc.{js}'
-      ],
+      files: [".eslintrc.{js}"],
       parserOptions: {
-        sourceType: 'script'
+        sourceType: "script"
       }
     }
   ],
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module'
+    ecmaVersion: "latest",
+    sourceType: "module"
   },
   rules: {
+    quotes: ["error", "double"]
   }
 }

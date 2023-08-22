@@ -26,14 +26,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  status: {
-    type: String,
-    enum: ["ONLINE", "OFFLINE"],
-    default: "OFFLINE",
-  },
-  lastSeen: {
-    type: Date,
-  },
 });
 
 userSchema.methods.isEmailTaken = async function (email) {
@@ -42,28 +34,24 @@ userSchema.methods.isEmailTaken = async function (email) {
 };
 
 userSchema.pre("save", async function (next) {
-  const user = this;
-  if (user.isModified("password")) {
+  if (!this.isModified("password")) {
     return next();
   }
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(this.password, salt);
-    this.password = hashedPassword;
-    return next();
-  } catch (err) {
-    return next(err);
-  }
+  const hash = await bcrypt.hash(this.password, 8);
+  this.password = hash;
+  next();
 });
 
 userSchema.methods.comparePassword = async function (password) {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    const isMatch = await bcrypt.compare(password, this.password);
-    return isMatch;
-  } catch (err) {
-    throw err;
-  }
+  const passwordHash = this.password;
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(password, passwordHash, (err, same) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(same);
+    });
+  });
 };
 
 export const User = mongoose.model("User", userSchema);

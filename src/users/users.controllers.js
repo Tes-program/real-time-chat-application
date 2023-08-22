@@ -11,7 +11,7 @@ import { generateAuthTokens } from "../modules/auth.js";
 
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const user = await createUser(username, email, password);
     const tokens = await generateAuthTokens(user);
@@ -25,7 +25,7 @@ export const register = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   const users = await getAllUsers();
-  return res.status(httpStatus.OK).json(users);
+  return res.status(httpStatus.OK).json({ users });
 };
 
 export const getUser = async (req, res) => {

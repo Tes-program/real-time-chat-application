@@ -10,13 +10,13 @@ export const createUser = async (username, email, password) => {
   if (await User.findOne({ email })) {
     throw new Error("Email already exists");
   }
-  const user = await User.create({ username, email, password });
-
+  const user = new User({ username, email, password });
+  await user.save();
   return user;
 };
 
-export const getAllUsers = async (username) => {
-  return User.find({ username });
+export const getAllUsers = async () => {
+  return User.find();
 };
 
 /**
