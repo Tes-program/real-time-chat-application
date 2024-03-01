@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch 'src/**/*.js' --exec 'node src/index.js'",
+    "dev": "nodemon --exec node src/index.js",
     "prepare": "husky install"
   },
   "repository": "https://github.com/Tes-program/real-time-chat-application.git",
@@ -18,7 +18,7 @@
     "express": "^4.18.2",
     "http-status": "^1.6.2",
     "husky": "^8.0.3",
-    "joi": "^17.9.2",
+    "joi": "^17.12.2",
     "jsonwebtoken": "^9.0.1",
     "lint-staged": "^14.0.0",
     "moment": "^2.29.4",
@@ -28,6 +28,7 @@
     "prettier": "^3.0.2",
     "redis": "^4.6.7",
     "validator": "^13.11.0",
+    "winston": "^3.11.0",
     "ws": "^8.13.0"
   },
   "devDependencies": {
