@@ -1,17 +1,19 @@
 import jwt from "jsonwebtoken"
 import moment from "moment"
 import { Token } from "./../model/token.Collection.js"
+import env from "../config/env.js"
+import { User } from "../model/user.Collection.js"
 
 export const generateToken = (
   userId,
   expires,
   type,
-  secret = process.env.JWT_SECRET
+  secret = env.jwt.secret
 ) => {
   const payload = {
     sub: userId,
     iat: moment().unix(),
-    exp: expires.unix(),
+    exp: moment(expires).unix(),
     type
   }
   return jwt.sign(payload, secret)
@@ -29,7 +31,7 @@ export const saveToken = async (token, userId, expires, type) => {
 
 export const verifyToken = async (
   token,
-  secret = process.env.JWT_SECRET,
+  secret = env.jwt.secret,
   type
 ) => {
   const payload = jwt.verify(token, secret)
@@ -47,12 +49,12 @@ export const verifyToken = async (
 
 export const generateAuthTokens = async (user) => {
   const accessTokenExpires = moment().add(
-    process.env.JWT_ACCESS_EXPIRATION_MINUTES,
+    env.jwt.access_expiration,
     "minutes"
   )
   const accessToken = generateToken(user.id, accessTokenExpires, "ACCESS")
   const refreshTokenExpires = moment().add(
-    process.env.JWT_REFRESH_EXPIRATION_DAYS,
+    env.jwt.refresh_expiration,
     "days"
   )
 
@@ -63,11 +65,31 @@ export const generateAuthTokens = async (user) => {
   return {
     access: {
       token: accessToken,
-      expires: accessTokenExpires.toDate()
+      expires: accessTokenExpires
     },
     refresh: {
       token: refreshToken,
-      expires: refreshTokenExpires.toDate()
+      expires: refreshTokenExpires
     }
+  }
+}
+
+export const protect = async (req, res, next) => {
+  const bearer = req.headers.authorization
+  if (!bearer || !bearer.startsWith("Bearer ")) {
+    return res.status(401).send("Unauthorized, no token provided")
+  }
+  const token = bearer.split("Bearer ")[1].trim()
+  try {
+    const secret = env.jwt.secret
+    const payload = jwt.verify(token, secret)
+    const user = await User.findById(payload.sub)
+    if (!user) {
+      return res.status(401).send("Unauthorized, user not found")
+    }
+    req.user = User
+    next()
+  } catch (error) {
+    return res.status(401).send("Unauthorized, invalid token")
   }
 }

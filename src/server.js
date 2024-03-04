@@ -4,8 +4,10 @@ import * as dotenv from "dotenv"
 import morgan from "morgan"
 import cors from "cors"
 import env from "./config/env.js"
-import { userRoute } from "./users/index.js"
+import { authRoute } from "./auth/index.js"
 import { Logger } from "./config/logger.js"
+import { protect } from "./modules/auth.js"
+import { userRoute } from "./users/index.js"
 
 dotenv.config()
 
@@ -18,8 +20,14 @@ app.listen(process.env.PORT, () => {
   logger.info(`Server is running on port ${env.port}`)
 })
 
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.path} ${req.ip}`)
+  next()
+})
+
 app.use(express.json())
-app.use("/user", userRoute)
+app.use("/auth", authRoute)
+app.use("/users", userRoute, protect)
 app.use(morgan("dev"))
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))

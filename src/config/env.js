@@ -54,6 +54,7 @@ export default {
   },
   jwt: {
     secret: envVars.JWT_SECRET,
-    expiration: envVars.JWT_EXPIRATION
+    access_expiration: envVars.JWT_ACCESS_EXPIRATION,
+    refresh_expiration: envVars.JWT_REFRESH_EXPIRATION
   }
 }

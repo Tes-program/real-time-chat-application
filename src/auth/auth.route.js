@@ -1,12 +1,10 @@
-import usersValidation from "./users.validation.js"
+import usersValidation from "./auth.validation.js"
 import {
   register,
   refreshTokens,
   login,
-  logout,
-  getUser,
-  getUsers
-} from "./users.controllers.js"
+  logout
+} from "./auth.controllers.js"
 import express from "express"
 import validate from "../modules/validate.js"
 
@@ -20,7 +18,5 @@ router.post(
   validate(usersValidation.refreshTokens),
   refreshTokens
 )
-router.get("/users", validate(usersValidation.getUsers), getUsers)
-router.get("/users/:username", validate(usersValidation.getUser), getUser)
 
 export default router
