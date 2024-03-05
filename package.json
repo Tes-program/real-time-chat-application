@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec node src/index.js",
     "prepare": "husky install",
-    "build": "node src/index.js"
+    "start": "node src/index.js"
   },
   "repository": "https://github.com/Tes-program/real-time-chat-application.git",
   "author": "Tes-program <teslimodumuyiwa@gmail.com>",
