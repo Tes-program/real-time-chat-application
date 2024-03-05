@@ -30,7 +30,8 @@ const envVarsSchema = joi
     JWT_REFRESH_EXPIRATION: joi
       .string()
       .required()
-      .description("JWT Refresh token expiration time")
+      .description("JWT Refresh token expiration time"),
+    REDISCLOUD_URL: joi.string().required().description("Redis cloud url")
   })
   .unknown()
   .required()
@@ -56,5 +57,8 @@ export default {
     secret: envVars.JWT_SECRET,
     access_expiration: envVars.JWT_ACCESS_EXPIRATION,
     refresh_expiration: envVars.JWT_REFRESH_EXPIRATION
+  },
+  redis: {
+    url: envVars.REDISCLOUD_URL
   }
 }
