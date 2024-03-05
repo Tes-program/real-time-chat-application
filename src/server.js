@@ -26,6 +26,11 @@ app.use((req, res, next) => {
   next()
 })
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the Real Time Chat Application using Websockets and JWT Authentication")
+}
+)
+
 app.use(express.json())
 app.use("/auth", authRoute)
 app.use("/users", userRoute, protect)
